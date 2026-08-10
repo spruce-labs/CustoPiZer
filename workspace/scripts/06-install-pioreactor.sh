@@ -72,8 +72,13 @@ install_pioreactor_package() {
           --index-url https://piwheels.org/simple \
           --extra-index-url https://pypi.org/simple
     else
+        # spruce-labs downstream: pull the core wheel from OUR release, not upstream's, so the
+        # offline fixes (ISSUE-01/02/05) ship in the image. PIO_VERSION is the spruce-labs tag
+        # (e.g. 26.7.2.post1); the ".postN" marker is URL/filename-safe (unlike a "+local").
+        # Deps still resolve from piwheels/pypi. Repoint to Pioreactor/pioreactor to build a
+        # stock upstream image from this branch.
         sudo -u pioreactor "$PIO_VENV/bin/pip" install \
-          "pioreactor[$1] @ https://github.com/Pioreactor/pioreactor/releases/download/$PIO_VERSION/pioreactor-$PIO_VERSION-py3-none-any.whl" \
+          "pioreactor[$1] @ https://github.com/spruce-labs/pioreactor/releases/download/$PIO_VERSION/pioreactor-$PIO_VERSION-py3-none-any.whl" \
           --index-url https://piwheels.org/simple \
           --extra-index-url https://pypi.org/simple
     fi
